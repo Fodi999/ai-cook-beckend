@@ -1,0 +1,10 @@
+/Users/dmitrijfomin/Desktop/it cook/target/debug/deps/libgetrandom-2534a17aec7ec3fd.rmeta: /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.2.16/src/lib.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.2.16/src/error.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.2.16/src/util.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.2.16/src/error_impls.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.2.16/src/util_libc.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.2.16/src/getentropy.rs
+
+/Users/dmitrijfomin/Desktop/it cook/target/debug/deps/getrandom-2534a17aec7ec3fd.d: /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.2.16/src/lib.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.2.16/src/error.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.2.16/src/util.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.2.16/src/error_impls.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.2.16/src/util_libc.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.2.16/src/getentropy.rs
+
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.2.16/src/lib.rs:
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.2.16/src/error.rs:
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.2.16/src/util.rs:
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.2.16/src/error_impls.rs:
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.2.16/src/util_libc.rs:
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.2.16/src/getentropy.rs:

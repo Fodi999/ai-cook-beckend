@@ -1,0 +1,10 @@
+/Users/dmitrijfomin/Desktop/it cook/target/debug/deps/libhashlink-9ac81cbfcf06537c.rmeta: /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashlink-0.10.0/src/lib.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashlink-0.10.0/src/linked_hash_map.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashlink-0.10.0/src/linked_hash_set.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashlink-0.10.0/src/lru_cache.rs
+
+/Users/dmitrijfomin/Desktop/it cook/target/debug/deps/libhashlink-9ac81cbfcf06537c.rlib: /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashlink-0.10.0/src/lib.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashlink-0.10.0/src/linked_hash_map.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashlink-0.10.0/src/linked_hash_set.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashlink-0.10.0/src/lru_cache.rs
+
+/Users/dmitrijfomin/Desktop/it cook/target/debug/deps/hashlink-9ac81cbfcf06537c.d: /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashlink-0.10.0/src/lib.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashlink-0.10.0/src/linked_hash_map.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashlink-0.10.0/src/linked_hash_set.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashlink-0.10.0/src/lru_cache.rs
+
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashlink-0.10.0/src/lib.rs:
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashlink-0.10.0/src/linked_hash_map.rs:
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashlink-0.10.0/src/linked_hash_set.rs:
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashlink-0.10.0/src/lru_cache.rs:

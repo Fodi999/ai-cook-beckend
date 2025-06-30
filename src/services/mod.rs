@@ -1,0 +1,10 @@
+pub mod auth;
+pub mod diary;
+pub mod fridge;
+pub mod recipe;
+pub mod goal;
+pub mod community;
+pub mod ai;
+pub mod health;
+pub mod media;
+pub mod realtime;

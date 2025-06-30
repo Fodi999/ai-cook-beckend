@@ -1,0 +1,11 @@
+/Users/dmitrijfomin/Desktop/it cook/target/debug/deps/libtinyvec-ad13fa882fba08b1.rmeta: /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/lib.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/array.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/array/generated_impl.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/arrayvec.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/arrayvec_drain.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/slicevec.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/tinyvec.rs
+
+/Users/dmitrijfomin/Desktop/it cook/target/debug/deps/tinyvec-ad13fa882fba08b1.d: /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/lib.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/array.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/array/generated_impl.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/arrayvec.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/arrayvec_drain.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/slicevec.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/tinyvec.rs
+
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/lib.rs:
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/array.rs:
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/array/generated_impl.rs:
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/arrayvec.rs:
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/arrayvec_drain.rs:
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/slicevec.rs:
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinyvec-1.9.0/src/tinyvec.rs:

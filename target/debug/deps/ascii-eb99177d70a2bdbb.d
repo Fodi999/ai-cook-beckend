@@ -1,0 +1,11 @@
+/Users/dmitrijfomin/Desktop/it cook/target/debug/deps/libascii-eb99177d70a2bdbb.rmeta: /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/lib.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/free_functions.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/ascii_char.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/ascii_str.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/ascii_string.rs
+
+/Users/dmitrijfomin/Desktop/it cook/target/debug/deps/libascii-eb99177d70a2bdbb.rlib: /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/lib.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/free_functions.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/ascii_char.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/ascii_str.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/ascii_string.rs
+
+/Users/dmitrijfomin/Desktop/it cook/target/debug/deps/ascii-eb99177d70a2bdbb.d: /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/lib.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/free_functions.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/ascii_char.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/ascii_str.rs /Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/ascii_string.rs
+
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/lib.rs:
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/free_functions.rs:
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/ascii_char.rs:
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/ascii_str.rs:
+/Users/dmitrijfomin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ascii-0.8.7/src/ascii_string.rs:
