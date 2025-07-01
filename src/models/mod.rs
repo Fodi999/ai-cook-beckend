@@ -4,3 +4,4 @@ pub mod fridge;
 pub mod recipe;
 pub mod goal;
 pub mod community;
+pub mod health;

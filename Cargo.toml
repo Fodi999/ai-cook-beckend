@@ -54,3 +54,6 @@ dashmap = "6.1.0"
 # Error handling
 anyhow = "1.0"
 thiserror = "2.0"
+
+# Random
+rand = "0.8"

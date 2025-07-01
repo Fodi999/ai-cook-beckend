@@ -8,3 +8,4 @@ pub mod ai;
 pub mod health;
 pub mod media;
 pub mod realtime;
+pub mod personal_health_assistant;

@@ -22,6 +22,10 @@ pub fn routes() -> Router {
         .route("/register", post(register))
         .route("/login", post(login))
         .route("/refresh", post(refresh_token))
+}
+
+pub fn protected_routes() -> Router {
+    Router::new()
         .route("/me", get(get_current_user))
         .route("/logout", post(logout))
 }

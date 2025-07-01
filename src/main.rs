@@ -3,6 +3,7 @@ use axum::{
     http::{StatusCode, Method, HeaderValue, HeaderName},
     routing::{get},
     Router,
+    middleware as axum_middleware,
 };
 use std::net::SocketAddr;
 use std::sync::Arc;
@@ -45,14 +46,28 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Build our application with routes
     let app = Router::new()
         .route("/health", get(health_check))
+        // Публичные роуты аутентификации (не требуют токена)
         .nest("/api/v1/auth", api::auth::routes())
-        .nest("/api/v1/diary", api::diary::routes())
-        .nest("/api/v1/fridge", api::fridge::routes())
-        .nest("/api/v1/recipes", api::recipes::routes())
-        .nest("/api/v1/goals", api::goals::routes())
-        .nest("/api/v1/community", api::community::routes())
-        .nest("/api/v1/realtime", api::websocket::routes())
-        .nest("/api/v1/ai", ai_routes())
+        // Защищенные роуты аутентификации (требуют токена)
+        .nest("/api/v1/auth", api::auth::protected_routes()
+            .layer(axum_middleware::from_fn_with_state(db_pool.clone(), middleware::auth_middleware)))
+        // Остальные защищенные роуты (требуют токена)
+        .nest("/api/v1/diary", api::diary::routes()
+            .layer(axum_middleware::from_fn_with_state(db_pool.clone(), middleware::auth_middleware)))
+        .nest("/api/v1/fridge", api::fridge::routes()
+            .layer(axum_middleware::from_fn_with_state(db_pool.clone(), middleware::auth_middleware)))
+        .nest("/api/v1/recipes", api::recipes::routes()
+            .layer(axum_middleware::from_fn_with_state(db_pool.clone(), middleware::auth_middleware)))
+        .nest("/api/v1/goals", api::goals::routes()
+            .layer(axum_middleware::from_fn_with_state(db_pool.clone(), middleware::auth_middleware)))
+        .nest("/api/v1/community", api::community::routes()
+            .layer(axum_middleware::from_fn_with_state(db_pool.clone(), middleware::auth_middleware)))
+        .nest("/api/v1/realtime", api::websocket::routes()
+            .layer(axum_middleware::from_fn_with_state(db_pool.clone(), middleware::auth_middleware)))
+        .nest("/api/v1/ai", ai_routes()
+            .layer(axum_middleware::from_fn_with_state(db_pool.clone(), middleware::auth_middleware)))
+        .nest("/api/v1/health", health_routes()
+            .layer(axum_middleware::from_fn_with_state(db_pool.clone(), middleware::auth_middleware)))
         .layer(
             CorsLayer::new()
                 .allow_origin([
@@ -111,5 +126,18 @@ fn ai_routes() -> Router {
         .route("/chat", post(api::ai::chat_with_ai))
         .route("/generate-recipe", post(api::ai::generate_recipe))
         .route("/analyze-nutrition", post(api::ai::analyze_nutrition))
+        .route("/proactive-message", post(api::ai::generate_proactive_message))
+        .with_state(AiService::from_env())
+}
+
+fn health_routes() -> Router {
+    use axum::routing::{get, post};
+    
+    Router::new()
+        .route("/chat", post(api::personal_health::personal_health_chat))
+        .route("/wellbeing", post(api::personal_health::daily_wellbeing_check))
+        .route("/dashboard", get(api::personal_health::health_dashboard))
+        .route("/recommendations", get(api::personal_health::get_recommendations))
+        .route("/mood-analysis", post(api::personal_health::mood_analysis))
         .with_state(AiService::from_env())
 }

@@ -6,3 +6,4 @@ pub mod goals;
 pub mod community;
 pub mod websocket;
 pub mod ai;
+pub mod personal_health;
