@@ -34,7 +34,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let db_pool = db::init_db(&config.database_url).await?;
     
     // Run migrations
-    sqlx::migrate!("./migrations").run(&db_pool).await?;
+    // sqlx::migrate!("./migrations").run(&db_pool).await?; // Миграции уже выполнены
 
     // Initialize WebSocket manager and realtime service
     let ws_manager = Arc::new(WebSocketManager::new());
