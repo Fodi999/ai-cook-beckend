@@ -45,14 +45,26 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     
     // Initialize database
     println!("💾 Connecting to database...");
+    println!("🔗 Database URL: {}...", &config.database_url[..std::cmp::min(50, config.database_url.len())]);
     let db_pool = match db::init_db(&config.database_url).await {
         Ok(pool) => {
             println!("✅ Database connected successfully");
+            
+            // Test database connection
+            match sqlx::query("SELECT 1").fetch_one(&pool).await {
+                Ok(_) => println!("✅ Database query test successful"),
+                Err(e) => {
+                    println!("❌ Database query test failed: {}", e);
+                    return Err(format!("Database query test failed: {}", e).into());
+                }
+            }
+            
             pool
         },
         Err(e) => {
             println!("❌ Failed to connect to database: {}", e);
-            return Err(e.into());
+            println!("🔍 Database URL format check: starts with 'postgresql://'? {}", config.database_url.starts_with("postgresql://"));
+            return Err(format!("Database connection failed: {}", e).into());
         }
     };
     
@@ -142,11 +154,19 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     
     println!("🌐 Starting server on http://0.0.0.0:{}", port);
     
-    axum::Server::bind(&addr)
+    match axum::Server::bind(&addr)
         .serve(app.into_make_service())
-        .await?;
-
-    Ok(())
+        .await 
+    {
+        Ok(_) => {
+            println!("✅ Server stopped gracefully");
+            Ok(())
+        },
+        Err(e) => {
+            println!("❌ Server error: {}", e);
+            Err(e.into())
+        }
+    }
 }
 
 #[instrument]
