@@ -103,8 +103,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("📡 Server will listen on http://0.0.0.0:{}", port);
     println!("💾 Database connected and migrations applied");
     println!("🔌 WebSocket support enabled at ws://0.0.0.0:{}/api/v1/realtime/ws", port);
-
-    let listener = tokio::net::TcpListener::bind(&addr).await?;
     
     println!("✅ IT Cook Backend is running successfully on PORT {}!", port);
     println!("🌐 Health check: http://0.0.0.0:{}/health", port);
@@ -119,7 +117,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     info!("🌐 Health check: http://0.0.0.0:{}/health", port);
     info!("📚 API docs: http://0.0.0.0:{}/api/v1", port);
     
-    axum::serve(listener, app.into_make_service()).await?;
+    let listener = tokio::net::TcpListener::bind(&addr).await?;
+    axum::serve(listener, app).await?;
 
     Ok(())
 }

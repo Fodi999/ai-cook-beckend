@@ -4,6 +4,7 @@ use axum::{
     middleware::Next,
     response::Response,
 };
+use async_trait::async_trait;
 
 use crate::{
     services::auth::{AuthService, Claims},
@@ -57,6 +58,7 @@ pub async fn auth_middleware(
 }
 
 // Extractor for claims
+#[axum::async_trait]
 impl<S> axum::extract::FromRequestParts<S> for Claims
 where
     S: Send + Sync,
