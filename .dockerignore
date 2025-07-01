@@ -1,0 +1,38 @@
+# Rust build artifacts
+backend/target/
+backend/Cargo.lock
+
+# Node.js
+frontend/node_modules/
+frontend/.next/
+frontend/dist/
+
+# Git
+.git/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Cache files
+.cache/
+
+# Development files
+*.md
+*.MD
+
+# Documentation files
+docs/
+*.txt
+
+# Any large files that aren't needed for the build
+frontend/public/
