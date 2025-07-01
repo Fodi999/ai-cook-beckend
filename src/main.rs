@@ -24,10 +24,39 @@ use services::realtime::{WebSocketManager, RealtimeService};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Initialize tracing
-    tracing_subscriber::fmt::init();
+    // Set up panic hook to capture panics
+    std::panic::set_hook(Box::new(|panic_info| {
+        println!("💥 PANIC OCCURRED: {}", panic_info);
+        if let Some(location) = panic_info.location() {
+            println!("💥 Panic location: {}:{}", location.file(), location.line());
+        }
+        std::process::exit(1);
+    }));
+
+    // Initialize tracing FIRST
+    println!("🔧 Initializing tracing subscriber...");
+    
+    // Try to initialize tracing with error handling
+    match std::panic::catch_unwind(|| {
+        tracing_subscriber::fmt::init();
+    }) {
+        Ok(_) => println!("✅ Tracing subscriber initialized"),
+        Err(_) => {
+            println!("❌ Failed to initialize tracing subscriber");
+            return Err("Failed to initialize tracing".into());
+        }
+    }
 
     println!("🚀 IT Cook Backend initializing...");
+    println!("🔍 Debug: Main function started successfully");
+    
+    // Check all environment variables
+    println!("🔍 Debug: Checking environment variables...");
+    println!("PORT: {}", std::env::var("PORT").unwrap_or("not set".to_string()));
+    println!("RUST_LOG: {}", std::env::var("RUST_LOG").unwrap_or("not set".to_string()));
+    println!("DATABASE_URL: {}", std::env::var("DATABASE_URL").map(|url| format!("{}...", &url[..std::cmp::min(50, url.len())])).unwrap_or("not set".to_string()));
+    println!("JWT_SECRET: {}", std::env::var("JWT_SECRET").map(|secret| format!("{}...", &secret[..std::cmp::min(10, secret.len())])).unwrap_or("not set".to_string()));
+    println!("SQLX_OFFLINE: {}", std::env::var("SQLX_OFFLINE").unwrap_or("not set".to_string()));
     
     // Load configuration
     println!("📁 Loading configuration...");
