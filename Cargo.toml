@@ -61,3 +61,4 @@ rand = "0.8"
 
 # Static storage for mock data
 once_cell = "1.19"
+base64ct = "=1.7.1"
