@@ -4,7 +4,7 @@ FROM rust:1.84 as builder
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Copy the Cargo.toml file
+# Copy the Cargo.toml and Cargo.lock files
 COPY Cargo.toml ./
 
 # Create a dummy main.rs to build dependencies
@@ -18,11 +18,13 @@ RUN rm src/main.rs
 COPY src ./src
 COPY migrations ./migrations
 
-# Build the application with SQLX offline mode
+# Enable SQLx offline mode
 ENV SQLX_OFFLINE=true
+
+# Build the actual project
 RUN cargo build --release
 
-# Use a smaller base image for the final stage
+# Final stage
 FROM debian:bookworm-slim
 
 # Install necessary system dependencies
@@ -32,21 +34,20 @@ RUN apt-get update && apt-get install -y \
     libpq5 \
     && rm -rf /var/lib/apt/lists/*
 
-# Set the working directory
+# Set working directory
 WORKDIR /app
 
-# Copy the binary from the builder stage
+# Copy the compiled binary and migrations
 COPY --from=builder /usr/src/app/target/release/itcook-backend /app/
-
-# Copy migrations
 COPY --from=builder /usr/src/app/migrations ./migrations
 
-# Expose the port that the app runs on
+# Expose the port your app will run on
 EXPOSE 8000
 
 # Set environment variables
 ENV RUST_LOG=info
 ENV PORT=8000
 
-# Command to run the application
+# Start the app
 CMD ["./itcook-backend"]
+
