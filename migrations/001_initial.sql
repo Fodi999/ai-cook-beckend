@@ -1,5 +1,9 @@
 -- Users table
-CREATE TYPE user_role AS ENUM ('user', 'admin', 'moderator');
+DO $$ BEGIN
+    CREATE TYPE user_role AS ENUM ('user', 'admin', 'moderator');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -71,7 +75,11 @@ CREATE TABLE diary_entries (
 );
 
 -- Fridge items
-CREATE TYPE fridge_category AS ENUM ('dairy', 'meat', 'fish', 'vegetables', 'fruits', 'grains', 'beverages', 'condiments', 'snacks', 'other');
+DO $$ BEGIN
+    CREATE TYPE fridge_category AS ENUM ('dairy', 'meat', 'fish', 'vegetables', 'fruits', 'grains', 'beverages', 'condiments', 'snacks', 'other');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 CREATE TABLE fridge_items (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -90,8 +98,17 @@ CREATE TABLE fridge_items (
 );
 
 -- Recipes
-CREATE TYPE recipe_category AS ENUM ('breakfast', 'lunch', 'dinner', 'snack', 'dessert', 'appetizer', 'beverage', 'other');
-CREATE TYPE difficulty_level AS ENUM ('easy', 'medium', 'hard');
+DO $$ BEGIN
+    CREATE TYPE recipe_category AS ENUM ('breakfast', 'lunch', 'dinner', 'snack', 'dessert', 'appetizer', 'beverage', 'other');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+    CREATE TYPE difficulty_level AS ENUM ('easy', 'medium', 'hard');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 CREATE TABLE recipes (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

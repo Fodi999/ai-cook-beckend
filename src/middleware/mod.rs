@@ -18,6 +18,8 @@ pub async fn auth_middleware(
     mut request: Request,
     next: Next,
 ) -> Result<Response, AppError> {
+    println!("🔐 AUTH MIDDLEWARE: Processing request to {}", request.uri());
+    
     let auth_header = request
         .headers()
         .get(AUTHORIZATION)
@@ -25,16 +27,32 @@ pub async fn auth_middleware(
         .and_then(|header| header.strip_prefix("Bearer "));
 
     let token = match auth_header {
-        Some(token) => token,
-        None => return Err(AppError::Unauthorized("Missing authorization token".to_string())),
+        Some(token) => {
+            println!("🔐 AUTH MIDDLEWARE: Token found");
+            token
+        },
+        None => {
+            println!("🔐 AUTH MIDDLEWARE: No token found");
+            return Err(AppError::Unauthorized("Missing authorization token".to_string()));
+        }
     };
 
     let auth_service = AuthService::new(pool);
-    let claims = auth_service.verify_token(token)?;
+    let claims = match auth_service.verify_token(token) {
+        Ok(claims) => {
+            println!("🔐 AUTH MIDDLEWARE: Token verified for user {}", claims.sub);
+            claims
+        },
+        Err(e) => {
+            println!("🔐 AUTH MIDDLEWARE: Token verification failed: {:?}", e);
+            return Err(e);
+        }
+    };
     
     // Add claims to request extensions
     request.extensions_mut().insert(claims);
     
+    println!("🔐 AUTH MIDDLEWARE: Proceeding to handler");
     Ok(next.run(request).await)
 }
 

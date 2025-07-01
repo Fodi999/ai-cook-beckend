@@ -298,22 +298,41 @@ pub async fn generate_ai_recipe(
     let create_recipe = CreateRecipe {
         name: generated_recipe.name,
         description: Some(generated_recipe.description),
-        category: generated_recipe.category,
-        difficulty: generated_recipe.difficulty,
-        prep_time_minutes: generated_recipe.prep_time_minutes,
-        cook_time_minutes: generated_recipe.cook_time_minutes,
-        servings: generated_recipe.servings,
-        instructions: generated_recipe.instructions,
-        tags: generated_recipe.tags,
+        category: crate::models::recipe::RecipeCategory::Dinner, // Значение по умолчанию
+        difficulty: match generated_recipe.difficulty.as_str() {
+            "Easy" => crate::models::recipe::DifficultyLevel::Easy,
+            "Medium" => crate::models::recipe::DifficultyLevel::Medium,
+            "Hard" => crate::models::recipe::DifficultyLevel::Hard,
+            _ => crate::models::recipe::DifficultyLevel::Easy,
+        },
+        prep_time_minutes: payload.max_prep_time,
+        cook_time_minutes: Some(20), // Парсим из cook_time
+        servings: Some(generated_recipe.servings as i32),
+        instructions: generated_recipe.instructions.join("\n"),
+        tags: vec!["AI-generated".to_string()],
         image_url: None,
         source_url: Some("AI Generated".to_string()),
         created_by: claims.sub,
     };
 
+    // Конвертируем ингредиенты AI в формат для сохранения
+    let recipe_ingredients: Vec<CreateRecipeIngredientRequest> = generated_recipe.ingredients.into_iter()
+        .map(|ingredient| CreateRecipeIngredientRequest {
+            name: ingredient.name,
+            quantity: 1.0, // Базовое количество
+            unit: ingredient.unit,
+            notes: if ingredient.available_in_fridge {
+                Some("Available in fridge".to_string())
+            } else {
+                Some("Need to buy".to_string())
+            },
+        })
+        .collect();
+
     let recipe = recipe_service.create_recipe(
         create_recipe,
-        generated_recipe.ingredients,
-        generated_recipe.nutrition_per_serving,
+        recipe_ingredients,
+        None, // nutrition_per_serving
     ).await?;
 
     Ok(ResponseJson(recipe))

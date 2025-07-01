@@ -1,12 +1,14 @@
 use axum::{
     extract::{State, Json},
     response::Json as ResponseJson,
+    Extension,
 };
 use serde::{Deserialize, Serialize};
 use chrono::Timelike;
 use rand::Rng;
 use crate::services::ai::AiService;
 use crate::utils::errors::AppError;
+use crate::services::auth::Claims;
 
 #[derive(Debug, Deserialize)]
 pub struct AiChatRequest {
@@ -54,6 +56,39 @@ pub struct RecipeGenerationRequest {
     pub cuisine_type: Option<String>,
     pub cooking_time: Option<i32>, // в минутах
     pub difficulty: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct FridgeAnalysisRequest {
+    pub analysis_type: String, // "report", "recipes", "expiry", "waste", "shopping"
+    pub max_recipes: Option<u8>,
+    pub include_diet_check: Option<bool>,
+}
+
+#[derive(Debug, Serialize)]
+pub struct FridgeAnalysisResponse {
+    pub summary: String,
+    pub recommendations: Vec<String>,
+    pub recipes: Option<Vec<crate::services::ai::GeneratedRecipe>>,
+    pub alerts: Vec<crate::services::ai::FridgeAlert>,
+    pub insights: Vec<String>,
+    pub cards: Option<Vec<AiCard>>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct FridgeRecipeRequest {
+    pub max_recipes: Option<u8>,
+    pub difficulty: Option<String>, // easy, medium, hard
+    pub max_cook_time: Option<String>, // "30 minutes", "1 hour"
+    pub dietary_restrictions: Option<Vec<String>>,
+}
+
+#[derive(Debug, Serialize)]
+pub struct FridgeRecipeResponse {
+    pub recipes: Vec<crate::services::ai::GeneratedRecipe>,
+    pub missing_ingredients_summary: Vec<String>,
+    pub shopping_suggestions: Vec<String>,
+    pub cards: Option<Vec<AiCard>>,
 }
 
 /// Обработчик для общения с ИИ-помощником
@@ -628,4 +663,182 @@ fn generate_contextual_proactive_message(hour: u32, request: &ProactiveMessageRe
             "Режим отдыха".to_string(),
         ]),
     }
+}
+
+/// Анализ холодильника с ИИ-помощником
+pub async fn analyze_fridge(
+    Extension(pool): Extension<crate::db::DbPool>,
+    claims: Claims,
+    Json(payload): Json<FridgeAnalysisRequest>,
+) -> Result<ResponseJson<FridgeAnalysisResponse>, AppError> {
+    let ai_service = AiService::from_env();
+    let fridge_service = crate::services::fridge::FridgeService::new(pool);
+    
+    // Определяем тип анализа
+    let analysis_type = match payload.analysis_type.as_str() {
+        "report" => crate::services::ai::FridgeAnalysisType::FullReport,
+        "recipes" => crate::services::ai::FridgeAnalysisType::RecipeSuggestions,
+        "expiry" => crate::services::ai::FridgeAnalysisType::ExpiryAlert,
+        "waste" => crate::services::ai::FridgeAnalysisType::WasteAnalysis,
+        "shopping" => crate::services::ai::FridgeAnalysisType::ShoppingSuggestions,
+        _ => crate::services::ai::FridgeAnalysisType::FullReport,
+    };
+    
+    let request = crate::services::ai::FridgeAnalysisRequest {
+        analysis_type,
+        include_recipes: Some(payload.analysis_type == "recipes" || payload.analysis_type == "report"),
+        dietary_restrictions: None, // TODO: Получать из профиля пользователя
+        max_recipes: payload.max_recipes,
+    };
+    
+    let result = ai_service.analyze_fridge(claims.sub, request, &fridge_service).await?;
+    
+    // Создаем карточки на основе результатов
+    let mut cards = Vec::new();
+    
+    // Карточка с общим состоянием
+    cards.push(AiCard {
+        title: "📊 Общий анализ".to_string(),
+        content: result.summary.clone(),
+        emoji: Some("📊".to_string()),
+        category: Some("fridge".to_string()),
+        priority: Some("high".to_string()),
+    });
+    
+    // Карточки для критических уведомлений
+    for alert in &result.alerts {
+        if matches!(alert.urgency, crate::services::ai::AlertUrgency::Critical | crate::services::ai::AlertUrgency::High) {
+            cards.push(AiCard {
+                title: match alert.alert_type {
+                    crate::services::ai::AlertType::Expiring => "⏰ Срок истекает".to_string(),
+                    crate::services::ai::AlertType::Expired => "❌ Просрочено".to_string(),
+                    crate::services::ai::AlertType::LowStock => "📉 Мало продукта".to_string(),
+                    crate::services::ai::AlertType::WastePattern => "🗑️ Частые отходы".to_string(),
+                    crate::services::ai::AlertType::DietViolation => "⚠️ Диетическое нарушение".to_string(),
+                },
+                content: alert.message.clone(),
+                emoji: Some(match alert.alert_type {
+                    crate::services::ai::AlertType::Expiring => "⏰".to_string(),
+                    crate::services::ai::AlertType::Expired => "❌".to_string(),
+                    crate::services::ai::AlertType::LowStock => "📉".to_string(),
+                    crate::services::ai::AlertType::WastePattern => "🗑️".to_string(),
+                    crate::services::ai::AlertType::DietViolation => "⚠️".to_string(),
+                }),
+                category: Some("alert".to_string()),
+                priority: Some(match alert.urgency {
+                    crate::services::ai::AlertUrgency::Critical => "high".to_string(),
+                    crate::services::ai::AlertUrgency::High => "medium".to_string(),
+                    _ => "low".to_string(),
+                }),
+            });
+        }
+    }
+    
+    Ok(ResponseJson(FridgeAnalysisResponse {
+        summary: result.summary,
+        recommendations: result.recommendations,
+        recipes: result.recipes,
+        alerts: result.alerts,
+        insights: result.insights,
+        cards: Some(cards),
+    }))
+}
+
+/// Генерация рецептов на основе содержимого холодильника
+pub async fn generate_fridge_recipes(
+    Extension(pool): Extension<crate::db::DbPool>,
+    claims: Claims,
+    Json(payload): Json<FridgeRecipeRequest>,
+) -> Result<ResponseJson<FridgeRecipeResponse>, AppError> {
+    let ai_service = AiService::from_env();
+    let fridge_service = crate::services::fridge::FridgeService::new(pool);
+    
+    // Создаем диетические ограничения если указаны
+    let dietary_restrictions = payload.dietary_restrictions.map(|_restrictions| {
+        crate::services::ai::DietaryRestriction {
+            allergens: Vec::new(), // TODO: Парсить из строк
+            intolerances: Vec::new(),
+            diets: Vec::new(),
+        }
+    });
+    
+    let recipes = ai_service.generate_recipes_from_fridge(
+        claims.sub,
+        payload.max_recipes,
+        dietary_restrictions,
+        &fridge_service,
+    ).await?;
+    
+    // Собираем общую информацию о недостающих ингредиентах
+    let mut all_missing: Vec<String> = Vec::new();
+    for recipe in &recipes {
+        all_missing.extend(recipe.missing_ingredients.clone());
+    }
+    all_missing.sort();
+    all_missing.dedup();
+    
+    // Создаем карточки для рецептов
+    let mut cards = Vec::new();
+    for (i, recipe) in recipes.iter().enumerate() {
+        cards.push(AiCard {
+            title: format!("🍽️ {}", recipe.name),
+            content: format!("{} | ⏱️ {} | 👥 {} порций", recipe.description, recipe.cook_time, recipe.servings),
+            emoji: Some("🍽️".to_string()),
+            category: Some("recipe".to_string()),
+            priority: if i == 0 { Some("high".to_string()) } else { Some("medium".to_string()) },
+        });
+    }
+    
+    // Карточка с советами по покупкам
+    if !all_missing.is_empty() {
+        cards.push(AiCard {
+            title: "🛒 Список покупок".to_string(),
+            content: format!("Для приготовления рецептов вам понадобится: {}", all_missing.join(", ")),
+            emoji: Some("🛒".to_string()),
+            category: Some("shopping".to_string()),
+            priority: Some("medium".to_string()),
+        });
+    }
+    
+    Ok(ResponseJson(FridgeRecipeResponse {
+        recipes,
+        missing_ingredients_summary: all_missing,
+        shopping_suggestions: vec![
+            "Планируйте покупки заранее".to_string(),
+            "Покупайте только необходимые ингредиенты".to_string(),
+            "Проверьте сроки годности при покупке".to_string(),
+        ],
+        cards: Some(cards),
+    }))
+}
+
+/// Быстрый отчет о состоянии холодильника
+pub async fn fridge_quick_report(
+    Extension(pool): Extension<crate::db::DbPool>,
+    claims: Claims,
+) -> Result<ResponseJson<FridgeAnalysisResponse>, AppError> {
+    let ai_service = AiService::from_env();
+    let fridge_service = crate::services::fridge::FridgeService::new(pool);
+    
+    let result = ai_service.create_fridge_report(claims.sub, &fridge_service).await?;
+    
+    // Создаем карточки
+    let cards = vec![
+        AiCard {
+            title: "🏠 Ваш холодильник".to_string(),
+            content: result.summary.clone(),
+            emoji: Some("🏠".to_string()),
+            category: Some("fridge".to_string()),
+            priority: Some("high".to_string()),
+        },
+    ];
+    
+    Ok(ResponseJson(FridgeAnalysisResponse {
+        summary: result.summary,
+        recommendations: result.recommendations,
+        recipes: result.recipes,
+        alerts: result.alerts,
+        insights: result.insights,
+        cards: Some(cards),
+    }))
 }

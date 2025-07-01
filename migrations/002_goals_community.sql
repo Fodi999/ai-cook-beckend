@@ -1,6 +1,15 @@
 -- Goals and achievements
-CREATE TYPE goal_type AS ENUM ('weight_loss', 'weight_gain', 'maintain_weight', 'calorie_intake', 'protein_intake', 'exercise', 'water', 'other');
-CREATE TYPE goal_status AS ENUM ('active', 'completed', 'paused', 'cancelled');
+DO $$ BEGIN
+    CREATE TYPE goal_type AS ENUM ('weight_loss', 'weight_gain', 'maintain_weight', 'calorie_intake', 'protein_intake', 'exercise', 'water', 'other');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+    CREATE TYPE goal_status AS ENUM ('active', 'completed', 'paused', 'cancelled');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 CREATE TABLE goals (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -42,7 +51,11 @@ CREATE TABLE achievements (
 );
 
 -- Community features
-CREATE TYPE post_type AS ENUM ('text', 'recipe', 'photo', 'video', 'achievement');
+DO $$ BEGIN
+    CREATE TYPE post_type AS ENUM ('text', 'recipe', 'photo', 'video', 'achievement');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 CREATE TABLE posts (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

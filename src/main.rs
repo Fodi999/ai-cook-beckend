@@ -33,8 +33,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Initialize database
     let db_pool = db::init_db(&config.database_url).await?;
     
-    // Run migrations
-    // sqlx::migrate!("./migrations").run(&db_pool).await?; // Миграции уже выполнены
+    // Run migrations - закомментировано, так как миграции уже применены
+    // sqlx::migrate!("./migrations").run(&db_pool).await?;
 
     // Initialize WebSocket manager and realtime service
     let ws_manager = Arc::new(WebSocketManager::new());
@@ -48,6 +48,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/health", get(health_check))
         // Публичные роуты аутентификации (не требуют токена)
         .nest("/api/v1/auth", api::auth::routes())
+        // Публичные роуты для предустановленных данных холодильника
+        // .nest("/api/v1/fridge", api::fridge::public_routes())
         // Защищенные роуты аутентификации (требуют токена)
         .nest("/api/v1/auth", api::auth::protected_routes()
             .layer(axum_middleware::from_fn_with_state(db_pool.clone(), middleware::auth_middleware)))
@@ -120,13 +122,17 @@ async fn health_check() -> Result<String, StatusCode> {
 }
 
 fn ai_routes() -> Router {
-    use axum::routing::post;
+    use axum::routing::{get, post};
     
     Router::new()
         .route("/chat", post(api::ai::chat_with_ai))
         .route("/generate-recipe", post(api::ai::generate_recipe))
         .route("/analyze-nutrition", post(api::ai::analyze_nutrition))
         .route("/proactive-message", post(api::ai::generate_proactive_message))
+        // Новые маршруты для интеграции с холодильником
+        .route("/fridge/analyze", post(api::ai::analyze_fridge))
+        .route("/fridge/recipes", post(api::ai::generate_fridge_recipes))
+        .route("/fridge/report", get(api::ai::fridge_quick_report))
         .with_state(AiService::from_env())
 }
 

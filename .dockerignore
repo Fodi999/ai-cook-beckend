@@ -1,0 +1,33 @@
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile*
+docker-compose*
+
+# Development
+.env*
+.vscode
+.idea
+
+# Rust
+target/
+Cargo.lock
+
+# Documentation
+*.md
+docs/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backup files
+*~
+*.bak
+*.swp
+*.tmp
