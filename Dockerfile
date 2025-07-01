@@ -43,11 +43,11 @@ COPY --from=builder /usr/src/app/migrations ./migrations
 COPY --from=builder /usr/src/app/sqlx-data.json ./
 
 # Expose the port that the app runs on
-EXPOSE 3000
+EXPOSE 8000
 
 # Set environment variables
 ENV RUST_LOG=info
-ENV ITCOOK_PORT=3000
+ENV PORT=8000
 
 # Command to run the application
 CMD ["./itcook-backend"]

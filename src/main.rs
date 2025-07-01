@@ -74,7 +74,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             CorsLayer::new()
                 .allow_origin([
                     "http://localhost:3000".parse::<HeaderValue>().unwrap(),
-                    "http://localhost:3001".parse::<HeaderValue>().unwrap()
+                    "http://localhost:3001".parse::<HeaderValue>().unwrap(),
+                    "https://ai-cook-frontend.vercel.app".parse::<HeaderValue>().unwrap(),
+                    "https://ai-cook-frontend-git-main-fodis-projects-dcba8b75.vercel.app".parse::<HeaderValue>().unwrap()
                 ])
                 .allow_methods([Method::GET, Method::POST, Method::PUT, Method::DELETE, Method::OPTIONS])
                 .allow_headers([
@@ -89,27 +91,33 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .layer(Extension(ws_manager))
         .layer(Extension(realtime_service));
 
-    let addr = SocketAddr::from(([0, 0, 0, 0], 3002));
+    // Получаем порт из переменной окружения PORT или используем значение по умолчанию
+    let port = std::env::var("PORT")
+        .unwrap_or_else(|_| "3000".to_string())
+        .parse::<u16>()
+        .unwrap_or(3000);
+    
+    let addr = SocketAddr::from(([0, 0, 0, 0], port));
     
     println!("🚀 IT Cook Backend starting...");
-    println!("📡 Server will listen on http://localhost:3002");
+    println!("📡 Server will listen on http://0.0.0.0:{}", port);
     println!("💾 Database connected and migrations applied");
-    println!("🔌 WebSocket support enabled at ws://localhost:3002/api/v1/realtime/ws");
+    println!("🔌 WebSocket support enabled at ws://0.0.0.0:{}/api/v1/realtime/ws", port);
 
     let listener = tokio::net::TcpListener::bind(&addr).await?;
     
-    println!("✅ IT Cook Backend is running successfully on PORT 3002!");
-    println!("🌐 Health check: http://localhost:3002/health");
-    println!("📚 API docs: http://localhost:3002/api/v1");
-    println!("🔧 CORS enabled for http://localhost:3000");
+    println!("✅ IT Cook Backend is running successfully on PORT {}!", port);
+    println!("🌐 Health check: http://0.0.0.0:{}/health", port);
+    println!("📚 API docs: http://0.0.0.0:{}/api/v1", port);
+    println!("🔧 CORS enabled for production");
     
     info!("🚀 IT Cook Backend starting...");
-    info!("📡 Server will listen on http://localhost:3002");
+    info!("📡 Server will listen on http://0.0.0.0:{}", port);
     info!("💾 Database connected and migrations applied");
-    info!("🔌 WebSocket support enabled at ws://localhost:3002/api/v1/realtime/ws");
+    info!("🔌 WebSocket support enabled at ws://0.0.0.0:{}/api/v1/realtime/ws", port);
     info!("✅ IT Cook Backend is running successfully!");
-    info!("🌐 Health check: http://localhost:3002/health");
-    info!("📚 API docs: http://localhost:3002/api/v1");
+    info!("🌐 Health check: http://0.0.0.0:{}/health", port);
+    info!("📚 API docs: http://0.0.0.0:{}/api/v1", port);
     
     axum::serve(listener, app.into_make_service()).await?;
 
