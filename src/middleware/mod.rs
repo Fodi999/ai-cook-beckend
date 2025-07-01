@@ -1,8 +1,9 @@
 use axum::{
-    extract::{Request, State},
-    http::header::AUTHORIZATION,
+    extract::State,
+    http::{Request, header::AUTHORIZATION},
     middleware::Next,
     response::Response,
+    body::Body,
 };
 use async_trait::async_trait;
 
@@ -16,8 +17,8 @@ pub struct AuthMiddleware;
 
 pub async fn auth_middleware(
     State(pool): State<DbPool>,
-    mut request: Request,
-    next: Next,
+    mut request: Request<Body>,
+    next: Next<Body>,
 ) -> Result<Response, AppError> {
     println!("🔐 AUTH MIDDLEWARE: Processing request to {}", request.uri());
     

@@ -5,10 +5,11 @@ edition = "2021"
 
 [dependencies]
 # Web framework
-axum = { version = "0.7.5", features = ["ws"] }
+axum = { version = "0.6", features = ["ws"] }
 tokio = { version = "1.37", features = ["full"] }
 tower = "0.4.13"
-tower-http = { version = "0.5.2", features = ["cors", "trace"] }
+tower-http = { version = "0.4", features = ["cors", "trace"] }
+hyper = { version = "0.14", features = ["server", "http1", "http2", "tcp"] }
 
 # Database
 sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "chrono", "uuid", "json"] }
@@ -47,10 +48,9 @@ multipart = "0.18"
 
 # WebSocket & Real-time
 tokio-tungstenite = "0.21"
-axum-extra = { version = "0.8", features = ["typed-routing"] }
+axum-extra = { version = "0.6", features = ["typed-routing"] }
 futures-util = "0.3"
 dashmap = "6.1.0"
-hyper = { version = "0.14", features = ["server", "http1", "http2", "tcp"] }
 
 # Error handling
 anyhow = "1.0"

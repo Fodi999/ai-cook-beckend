@@ -27,11 +27,34 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Initialize tracing
     tracing_subscriber::fmt::init();
 
+    println!("🚀 IT Cook Backend initializing...");
+    
     // Load configuration
-    let config = Config::new()?;
+    println!("📁 Loading configuration...");
+    let config = match Config::new() {
+        Ok(config) => {
+            println!("✅ Configuration loaded successfully");
+            println!("🔗 Database URL: {}...", &config.database_url[..std::cmp::min(50, config.database_url.len())]);
+            config
+        },
+        Err(e) => {
+            println!("❌ Failed to load configuration: {}", e);
+            return Err(e.into());
+        }
+    };
     
     // Initialize database
-    let db_pool = db::init_db(&config.database_url).await?;
+    println!("💾 Connecting to database...");
+    let db_pool = match db::init_db(&config.database_url).await {
+        Ok(pool) => {
+            println!("✅ Database connected successfully");
+            pool
+        },
+        Err(e) => {
+            println!("❌ Failed to connect to database: {}", e);
+            return Err(e.into());
+        }
+    };
     
     // Run migrations - закомментировано, так как миграции уже применены
     // sqlx::migrate!("./migrations").run(&db_pool).await?;
@@ -117,8 +140,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     info!("🌐 Health check: http://0.0.0.0:{}/health", port);
     info!("📚 API docs: http://0.0.0.0:{}/api/v1", port);
     
-    let listener = tokio::net::TcpListener::bind(&addr).await?;
-    axum::serve(listener, app).await?;
+    println!("🌐 Starting server on http://0.0.0.0:{}", port);
+    
+    axum::Server::bind(&addr)
+        .serve(app.into_make_service())
+        .await?;
 
     Ok(())
 }

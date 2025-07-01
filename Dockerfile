@@ -45,9 +45,21 @@ COPY --from=builder /usr/src/app/migrations ./migrations
 EXPOSE 8000
 
 # Set environment variables
-ENV RUST_LOG=info
+ENV RUST_LOG=debug
 ENV PORT=8000
 
-# Start the app
-CMD ["./itcook-backend"]
+# Create a startup script with better error handling
+RUN echo '#!/bin/bash\n\
+echo "🚀 Starting IT Cook Backend..."\n\
+echo "📊 Environment:"\n\
+echo "PORT: $PORT"\n\
+echo "RUST_LOG: $RUST_LOG"\n\
+echo "DATABASE_URL: ${DATABASE_URL:0:50}..."\n\
+echo "JWT_SECRET: ${JWT_SECRET:0:10}..."\n\
+echo "🏃 Running backend..."\n\
+exec ./itcook-backend\n\
+' > /app/start.sh && chmod +x /app/start.sh
+
+# Start the app with error handling
+CMD ["/app/start.sh"]
 
