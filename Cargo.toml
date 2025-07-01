@@ -4,60 +4,63 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-# Web framework
-axum = { version = "0.6", features = ["ws"] }
-tokio = { version = "1.37", features = ["full"] }
+# Web framework - используем старые стабильные версии
+axum = { version = "0.6.20", features = ["ws"] }
+tokio = { version = "1.35", features = ["full"] }
 tower = "0.4.13"
-tower-http = { version = "0.4", features = ["cors", "trace"] }
-hyper = { version = "0.14", features = ["server", "http1", "http2", "tcp"] }
+tower-http = { version = "0.4.4", features = ["cors", "trace"] }
+hyper = { version = "0.14.27", features = ["server", "http1", "http2", "tcp"] }
 
-# Database
-sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "chrono", "uuid", "json"] }
+# Database - фиксируем старую версию
+sqlx = { version = "0.7.3", features = ["runtime-tokio-rustls", "postgres", "chrono", "uuid", "json"] }
 
 # Serialization
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
+serde = { version = "1.0.196", features = ["derive"] }
+serde_json = "1.0.113"
 
 # Authentication & Security
-jsonwebtoken = "9.2"
-bcrypt = "0.15"
-uuid = { version = "1.8", features = ["v4", "serde"] }
+jsonwebtoken = "9.2.0"
+bcrypt = "0.15.0"
+uuid = { version = "1.7.0", features = ["v4", "serde"] }
 
 # Environment & Config
-dotenvy = "0.15"
-config = "0.14"
+dotenvy = "0.15.7"
+config = "0.14.0"
 
 # Logging
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 
 # Time
-chrono = { version = "0.4", features = ["serde"] }
+chrono = { version = "0.4.34", features = ["serde"] }
 
 # HTTP Client for external APIs
-reqwest = { version = "0.11.27", features = ["json"] }
+reqwest = { version = "0.11.24", features = ["json"] }
 
 # Validation
-validator = { version = "0.18", features = ["derive"] }
+validator = { version = "0.16.1", features = ["derive"] }
 
 # Async
-async-trait = "0.1"
+async-trait = "0.1.77"
 
-# File upload
-multipart = "0.18"
+# File upload - используем более новую версию для совместимости
+multer = "2.1.0"
 
 # WebSocket & Real-time
-tokio-tungstenite = "0.21"
-axum-extra = { version = "0.6", features = ["typed-routing"] }
-futures-util = "0.3"
-dashmap = "6.1.0"
+tokio-tungstenite = "0.20.1"
+axum-extra = { version = "0.6.0", features = ["typed-routing"] }
+futures-util = "0.3.30"
+dashmap = "5.5.3"
 
 # Error handling
-anyhow = "1.0"
-thiserror = "2.0"
+anyhow = "1.0.79"
+thiserror = "1.0.57"
 
 # Random
-rand = "0.8"
+rand = "0.8.5"
 
 # Static storage for mock data
-once_cell = "1.19"
+once_cell = "1.19.0"
+
+# Зафиксируем проблемную зависимость
+base64ct = "=1.7.1"
